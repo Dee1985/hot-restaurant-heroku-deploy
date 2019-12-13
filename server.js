@@ -1,6 +1,6 @@
 var express = require("express");
 var path = require("path");
-const reservations = require("/res.js")
+const reservations = require("./res.js")
 
 // Sets up the Express App
 // =============================================================
