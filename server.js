@@ -1,7 +1,11 @@
 var express = require("express");
 var path = require("path");
-const reservations = require("./res.js")
+const reservations = require("./res.js");
+const waitlist = require("./waitlist.js")
 
+
+const tableArray = []
+const waitArray = []
 // Sets up the Express App
 // =============================================================
 var app = express();
@@ -15,57 +19,58 @@ app.use(express.json());
 
 
 
-
-
-
-// Basic route that sends the user first to the AJAX Page
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+app.get("/reserve", function(req, res) {
+    res.sendFile(path.join(__dirname, "res.html"));
+});
+app.get("/tables", function(req, res) {
+    res.sendFile(path.join(__dirname, "table.html"));
 });
 
-app.get("/add", function(req, res) {
-  res.sendFile(path.join(__dirname, "add.html"));
-});
+app.get("/api/tableArray/:table", function(req, res) {
+  let chosen = req.params.table;
 
-// Displays all characters
-app.get("/api/characters", function(req, res) {
-  return res.json(characters);
-});
+  console.log(waitlist);
 
-// Displays a single character, or returns false
-app.get("/api/characters/:character", function(req, res) {
-  var chosen = req.params.character;
-
-  console.log(chosen);
-
-  for (var i = 0; i < characters.length; i++) {
-    if (chosen === characters[i].routeName) {
-      return res.json(characters[i]);
+  for (let i = 0; i < tableArray.length; i++) {
+    if (chosen === tableArray[i].routeName) {
+      return res.json(tableArray[i]);
     }
   }
 
   return res.json(false);
 });
 
-// Create New Characters - takes in JSON input
-app.post("/api/characters", function(req, res) {
+
+app.post("/api/tableArray", function(req, res) {
   // req.body hosts is equal to the JSON post sent from the user
   // This works because of our body parsing middleware
-  var newCharacter = req.body;
+  let newtableArray = req.body;
 
   // Using a RegEx Pattern to remove spaces from newCharacter
   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+  newtableArray.routeName = newtableArray.customerName.replace(/\s+/g, "").toLowerCase();
 
-  console.log(newCharacter);
+  console.log(newtableArray);
 
-  characters.push(newCharacter);
+  characters.push(newtableArray);
 
-  res.json(newCharacter);
+  res.json(newtableArray);
 });
 
-// Starts the server to begin listening
-// =============================================================
+
 app.listen(PORT, function() {
   console.log("App listening on PORT " + PORT);
 });
+
+
+
+
+
+
+
+
+
+
